@@ -14,6 +14,7 @@
 #include <vector>
 
 #include "base/cxx17_backports.h"
+#include "base/feature_list.h"
 #include "base/mac/mac_util.h"
 #include "base/mac/scoped_cftyperef.h"
 #include "base/strings/sys_string_conversions.h"
@@ -1212,18 +1213,8 @@ gfx::AcceleratedWidget NativeWindowMac::GetAcceleratedWidget() const {
 }
 
 content::DesktopMediaID NativeWindowMac::GetDesktopMediaID() const {
-  auto desktop_media_id = content::DesktopMediaID(
-      content::DesktopMediaID::TYPE_WINDOW, GetAcceleratedWidget());
-  // c.f.
-  // https://source.chromium.org/chromium/chromium/src/+/master:chrome/browser/media/webrtc/native_desktop_media_list.cc;l=372?q=kWindowCaptureMacV2&ss=chromium
-  // Refs https://github.com/electron/electron/pull/30507
-  // TODO(deepak1556): Match upstream for `kWindowCaptureMacV2`
-#if 0
-    if (remote_cocoa::ScopedCGWindowID::Get(desktop_media_id.id)) {
-      desktop_media_id.window_id = desktop_media_id.id;
-    }
-#endif
-  return desktop_media_id;
+  return content::DesktopMediaID(content::DesktopMediaID::TYPE_WINDOW,
+                                 GetAcceleratedWidget());
 }
 
 NativeWindowHandle NativeWindowMac::GetNativeWindowHandle() const {
